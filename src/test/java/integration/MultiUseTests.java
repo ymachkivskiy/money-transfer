@@ -1,30 +1,21 @@
 package integration;
 
-import io.netty.util.concurrent.DefaultThreadFactory;
 import org.jm.interview.mtr.service.Account;
 import org.jm.interview.mtr.service.Money;
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Collection;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static com.google.common.base.Preconditions.checkArgument;
 import static integration.TestServer.createNewAccount;
 import static integration.TestServer.getExistingAccount;
 import static integration.TestServer.rechargeAccount;
 import static java.util.Arrays.asList;
-import static java.util.concurrent.Executors.newFixedThreadPool;
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static utils.ConcurrentUtils.duplicateWorker;
+import static utils.ConcurrentUtils.multiplyAction;
+import static utils.ConcurrentUtils.performConcurrentWork;
 
 public class MultiUseTests {
 
-    @Test
+    @Test(timeout = 20_000)
     public void should_commit_all_money_to_recharged_account() throws InterruptedException {
         //given
         Account newAccount = createNewAccount();
@@ -45,7 +36,7 @@ public class MultiUseTests {
                 .isEqualByComparingTo(Money.fromValue(5 * workerCount * workerIterations));
     }
 
-    @Test
+    @Test(timeout = 30_000)
     public void should_commit_all_money_transfers_between_different_accounts() throws InterruptedException {
         //given
         Account account_A = createAccountWithBalance(5000);
@@ -80,59 +71,10 @@ public class MultiUseTests {
         assertThat(getExistingAccount(account_C.getAccountId()).getBalance())
                 .isEqualByComparingTo(Money.fromValue(15000 + 300 + 500 - 750 - 1000));
 
-
-    }
-
-    private static void performConcurrentWork(Collection<Runnable> workers) throws InterruptedException {
-
-        ExecutorService executorService = newFixedThreadPool(workers.size(), new DefaultThreadFactory("test-worker-%d"));
-
-        try {
-
-            final CountDownLatch start = new CountDownLatch(1);
-            final CountDownLatch end = new CountDownLatch(workers.size());
-
-            for (Runnable w : workers) {
-                executorService.execute(() -> {
-                    try {
-                        start.await();
-
-                        w.run();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } finally {
-                        end.countDown();
-                    }
-                });
-            }
-
-            start.countDown();
-            end.await();
-
-        } finally {
-            executorService.shutdown();
-            executorService.awaitTermination(10, TimeUnit.SECONDS);
-        }
-
     }
 
     private static Runnable transferMoneyAction(Account sourceAccount, Account destinationAccount, long money) {
         return () -> TestServer.transferMoney(sourceAccount.getAccountId(), destinationAccount.getAccountId(), Money.fromValue(money));
-    }
-
-    private static Collection<Runnable> duplicateWorker(int count, Runnable single) {
-        return IntStream.range(0, count)
-                .mapToObj(i -> single)
-                .collect(toList());
-    }
-
-    private static Runnable multiplyAction(int multiplier, Runnable action) {
-        checkArgument(multiplier > 0);
-        return () -> {
-            for (int i = 0; i < multiplier; i++) {
-                action.run();
-            }
-        };
     }
 
     private static Account createAccountWithBalance(int i) {

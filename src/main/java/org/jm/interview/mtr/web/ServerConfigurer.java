@@ -1,12 +1,11 @@
 package org.jm.interview.mtr.web;
 
 import com.google.inject.TypeLiteral;
-import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.RequiredArgsConstructor;
-import org.jm.interview.mtr.service.AccountNotFoundException;
 import org.jm.interview.mtr.service.AccountService;
 import org.jm.interview.mtr.service.Money;
 import org.jm.interview.mtr.service.MoneyTransferService;
+import org.jm.interview.mtr.service.exception.AccountNotFoundException;
 import org.jm.interview.mtr.web.endpoints.AccountsController;
 import org.jm.interview.mtr.web.endpoints.TransfersController;
 import org.jooby.Jooby;
@@ -17,7 +16,6 @@ import org.jooby.json.Jackson;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
-import java.util.concurrent.Executors;
 
 @RequiredArgsConstructor(onConstructor_ = {@Inject})
 public class ServerConfigurer {
@@ -30,14 +28,18 @@ public class ServerConfigurer {
         jooby.use(new Jackson());
         jooby.use(new Exec());
 
+
+        //3
         jooby.use(AccountsController.class);
         jooby.bind(AccountService.class, () -> accountService);
 
         jooby.use(TransfersController.class);
         jooby.bind(MoneyTransferService.class, () -> moneyTransferService);
 
+        //1
         jooby.err(AccountNotFoundException.class, (req, rsp, ex) -> rsp.status(Status.NOT_FOUND).end());
 
+        //2
         jooby.parser(new Parser() {
             @Override
             public Object parse(TypeLiteral<?> type, Context ctx) throws Throwable {
@@ -52,6 +54,5 @@ public class ServerConfigurer {
             }
         });
 
-        jooby.executor(Executors.newFixedThreadPool(10, new DefaultThreadFactory("http-worker-%d")));
     }
 }

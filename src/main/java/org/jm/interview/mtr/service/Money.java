@@ -34,8 +34,12 @@ public class Money implements Comparable<Money>, FluentComparableMixin<Money> {
     }
 
     public Money subtract(Money money) {
-        checkArgument(money.isEqualOrLessThan(this));
+        checkArgument(money.isEqualOrLessThan(this), "Subtraction of " + money + " from " + this + " is illegal");
         return new Money(value.subtract(money.value));
+    }
+
+    public Money subtractFrom(Money base) {
+        return base.subtract(this);
     }
 
     @Override
