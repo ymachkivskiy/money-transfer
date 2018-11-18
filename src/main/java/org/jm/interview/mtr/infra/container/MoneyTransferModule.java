@@ -15,7 +15,6 @@ public class MoneyTransferModule extends AbstractModule {
     @Override
     protected void configure() {
 
-//        bind(Jooby.class).toProvider(ServerProvider.class);
         bind(ServerConfigurer.class);
 
         bind(AccountService.class).to(DatabaseAccountService.class);

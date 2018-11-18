@@ -4,12 +4,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.jm.interview.mtr.infra.container.MoneyTransferModule;
 import org.jooby.Jooby;
-import org.jooby.funzy.Throwing;
-
-import java.util.OptionalInt;
 
 public class App {
-
 
     private final Jooby instance;
 
@@ -32,13 +28,7 @@ public class App {
     }
 
     public App onStarted(Runnable callback) {
-        instance.onStarted(new Throwing.Runnable() {
-            @Override
-            public void tryRun() throws Throwable {
-                callback.run();
-            }
-        });
-
+        instance.onStarted(callback::run);
         return this;
     }
 

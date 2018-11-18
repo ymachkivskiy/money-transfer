@@ -1,10 +1,14 @@
-package org.jm.interview.mtr.web;
+package org.jm.interview.mtr.web.endpoints;
 
 import lombok.RequiredArgsConstructor;
 import org.jm.interview.mtr.service.Account;
 import org.jm.interview.mtr.service.AccountId;
 import org.jm.interview.mtr.service.AccountService;
 import org.jm.interview.mtr.service.Money;
+import org.jooby.MediaType;
+import org.jooby.Result;
+import org.jooby.Results;
+import org.jooby.Status;
 import org.jooby.mvc.GET;
 import org.jooby.mvc.POST;
 import org.jooby.mvc.Path;
@@ -18,8 +22,9 @@ public class AccountsController {
 
     @POST
     @Path("/accounts")
-    public Account createNewAccount() {
-        return accountService.createAccount();
+    public Result createNewAccount() {
+        Account newAccount = accountService.createAccount();
+        return Results.with(newAccount, Status.CREATED).type(MediaType.json);
     }
 
     @GET

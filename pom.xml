@@ -11,9 +11,16 @@
     <name>money-transfer</name>
 
     <properties>
-        <jooby.version>1.5.1</jooby.version>
+        <jooby.version>${jooby-jackson.version}</jooby.version>
+        <jooby-jackson.version>1.5.1</jooby-jackson.version>
         <guice.version>4.2.0</guice.version>
+        <guava.version>27.0-jre</guava.version>
         <lombok.version>1.18.4</lombok.version>
+        <!--Test versions-->
+        <junit.version>4.12</junit.version>
+        <assertj.version>3.11.1</assertj.version>
+        <rest-assured.version>2.9.0</rest-assured.version>
+        <gson.version>2.6.2</gson.version>
 
         <!-- Startup class -->
         <application.class>org.jm.interview.mtr.App</application.class>
@@ -26,6 +33,13 @@
             <groupId>org.jooby</groupId>
             <artifactId>jooby-netty</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.jooby</groupId>
+            <artifactId>jooby-executor</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+
         <dependency>
             <groupId>org.jooby</groupId>
             <artifactId>jooby-jackson</artifactId>
@@ -42,8 +56,19 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
+        <!--Test deps-->
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
         </dependency>
 
         <dependency>
@@ -64,10 +89,11 @@
                 <artifactId>jooby-netty</artifactId>
                 <version>${jooby.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.jooby</groupId>
                 <artifactId>jooby-jackson</artifactId>
-                <version>1.5.1</version>
+                <version>${jooby-jackson.version}</version>
             </dependency>
 
             <dependency>
@@ -83,23 +109,37 @@
                 <scope>provided</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+
 
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.assertj/assertj-core -->
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>com.jayway.restassured</groupId>
                 <artifactId>rest-assured</artifactId>
-                <version>2.9.0</version>
+                <version>${rest-assured.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
-                <version>2.6.2</version>
+                <version>${gson.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -137,6 +177,19 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit47</artifactId>
+                        <version>3.0.0-M1</version>
+                    </dependency>
+                </dependencies>
             </plugin>
 
         </plugins>

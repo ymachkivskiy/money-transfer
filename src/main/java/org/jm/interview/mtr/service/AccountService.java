@@ -6,5 +6,5 @@ public interface AccountService {
 
     Account createAccount();
 
-    Account rechargeAccount(AccountId accountId, Money money);
+    Account rechargeAccount(AccountId accountId, Money money) throws AccountNotFoundException;
 }
