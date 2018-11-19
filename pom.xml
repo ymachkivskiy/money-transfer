@@ -11,8 +11,7 @@
     <name>money-transfer</name>
 
     <properties>
-        <jooby.version>${jooby-jackson.version}</jooby.version>
-        <jooby-jackson.version>1.5.1</jooby-jackson.version>
+        <jooby.version>1.5.1</jooby.version>
         <guice.version>4.2.0</guice.version>
         <guava.version>27.0-jre</guava.version>
         <lombok.version>1.18.4</lombok.version>
@@ -37,7 +36,6 @@
         <dependency>
             <groupId>org.jooby</groupId>
             <artifactId>jooby-executor</artifactId>
-            <version>1.5.1</version>
         </dependency>
 
         <dependency>
@@ -93,7 +91,13 @@
             <dependency>
                 <groupId>org.jooby</groupId>
                 <artifactId>jooby-jackson</artifactId>
-                <version>${jooby-jackson.version}</version>
+                <version>${jooby.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jooby</groupId>
+                <artifactId>jooby-executor</artifactId>
+                <version>${jooby.version}</version>
             </dependency>
 
             <dependency>
