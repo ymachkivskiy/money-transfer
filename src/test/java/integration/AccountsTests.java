@@ -59,7 +59,7 @@ public class AccountsTests {
     @Test
     public void should_fail_404_when_getting_non_existing_account() {
         //when
-        getAccountAssert(AccountId.fromString("non-existing-id"))
+        getAccountAssert(AccountId.create("non-existing-id"))
                 //then
                 .statusCode(404);
     }
@@ -100,7 +100,7 @@ public class AccountsTests {
     @Test
     public void should_fail_404_when_recharging_non_existing_account() {
         //when
-        rechargeAccountAssert(AccountId.fromString("some-404-account-id"), Money.fromValue(50))
+        rechargeAccountAssert(AccountId.create("some-404-account-id"), Money.fromValue(50))
                 //then
                 .statusCode(404);
 

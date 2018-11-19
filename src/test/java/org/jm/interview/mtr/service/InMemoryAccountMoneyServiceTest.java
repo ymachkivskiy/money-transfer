@@ -3,7 +3,6 @@ package org.jm.interview.mtr.service;
 import org.jm.interview.mtr.service.exception.AccountNotFoundException;
 import org.jm.interview.mtr.service.exception.InsufficientMoneyAmountException;
 import org.jm.interview.mtr.service.exception.InvalidOperationException;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -82,7 +81,7 @@ public class InMemoryAccountMoneyServiceTest {
     @Test
     public void should_throw_account_not_found_when_getting_not_existing_account() {
         //when
-        Throwable throwable = catchThrowable(() -> service.getAccount(AccountId.fromString("404-account")));
+        Throwable throwable = catchThrowable(() -> service.getAccount(AccountId.create("404-account")));
 
         //then
         assertThat(throwable)
@@ -94,7 +93,7 @@ public class InMemoryAccountMoneyServiceTest {
     @Test
     public void should_throw_account_not_found_when_recharging_not_existing_account() {
         //when
-        Throwable throwable = catchThrowable(() -> service.rechargeAccount(AccountId.fromString("404-account"), Money.fromValue(55)));
+        Throwable throwable = catchThrowable(() -> service.rechargeAccount(AccountId.create("404-account"), Money.fromValue(55)));
 
         //then
         assertThat(throwable)
@@ -109,7 +108,7 @@ public class InMemoryAccountMoneyServiceTest {
         Account tgt = service.createAccount();
 
         //when
-        Throwable throwable = catchThrowable(() -> service.transferMoney(AccountId.fromString("source-404-account"), tgt.getAccountId(), Money.fromValue(55)));
+        Throwable throwable = catchThrowable(() -> service.transferMoney(AccountId.create("source-404-account"), tgt.getAccountId(), Money.fromValue(55)));
 
         //then
         assertThat(throwable)
@@ -125,7 +124,7 @@ public class InMemoryAccountMoneyServiceTest {
         service.rechargeAccount(src.getAccountId(), Money.fromValue(1000));
 
         //when
-        Throwable throwable = catchThrowable(() -> service.transferMoney(src.getAccountId(), AccountId.fromString("target-404-account"), Money.fromValue(55)));
+        Throwable throwable = catchThrowable(() -> service.transferMoney(src.getAccountId(), AccountId.create("target-404-account"), Money.fromValue(55)));
 
         //then
         assertThat(throwable)

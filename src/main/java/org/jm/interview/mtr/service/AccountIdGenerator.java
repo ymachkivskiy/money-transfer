@@ -5,7 +5,7 @@ import java.util.UUID;
 public class AccountIdGenerator {
 
     public AccountId generateNewId() {
-        return AccountId.fromString(UUID.randomUUID().toString());
+        return AccountId.create(UUID.randomUUID().toString());
     }
 
 }

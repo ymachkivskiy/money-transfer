@@ -51,21 +51,20 @@ public class InMemoryAccountMoneyService implements AccountService, MoneyTransfe
             throw new InvalidOperationException();
         }
 
-        AccountLocker sourceLocker = getAccountLocker(sourceAccountId);
-        AccountLocker destinationLocker = getAccountLocker(destinationAccountId);
+        TransactionMember sourceAccountOperation = getAccountLocker(sourceAccountId)
+                .asPartOfTransaction(
+                        account -> {
+                            if (account.getBalance().isLessThan(money)) {
+                                throw new InsufficientMoneyAmountException(account.getAccountId());
+                            }
+                        },
+                        account -> account.updateMoney(money::subtractFrom)
+                );
 
-        TransactionMember sourceAccountOperation = sourceLocker.asPartOfTransaction(
-                account -> {
-                    if (account.getBalance().isLessThan(money)) {
-                        throw new InsufficientMoneyAmountException(account.getAccountId());
-                    }
-                },
-                account -> account.updateMoney(money::subtractFrom)
-        );
-
-        TransactionMember destinationAccountOperation = destinationLocker.asPartOfTransaction(
-                account -> account.updateMoney(money::add)
-        );
+        TransactionMember destinationAccountOperation = getAccountLocker(destinationAccountId)
+                .asPartOfTransaction(
+                        account -> account.updateMoney(money::add)
+                );
 
         new AccountsTransaction(sourceAccountOperation, destinationAccountOperation).perform();
     }

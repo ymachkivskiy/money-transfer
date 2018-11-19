@@ -3,7 +3,6 @@ package integration;
 import org.jm.interview.mtr.service.Account;
 import org.jm.interview.mtr.service.AccountId;
 import org.jm.interview.mtr.service.Money;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static integration.TestServer.createNewAccount;
@@ -38,7 +37,7 @@ public class MoneyTransferTests {
         Account target_account = createNewAccount();
 
         //when
-        transferMoneyAssert(AccountId.fromString("non-present-account"), target_account.getAccountId(), Money.fromValue(50))
+        transferMoneyAssert(AccountId.create("non-present-account"), target_account.getAccountId(), Money.fromValue(50))
                 //then
                 .statusCode(404);
     }
@@ -49,7 +48,7 @@ public class MoneyTransferTests {
         Account source_account = createAccountWithBalance(150);
 
         //when
-        transferMoneyAssert(source_account.getAccountId(), AccountId.fromString("non-present-account"), Money.fromValue(75))
+        transferMoneyAssert(source_account.getAccountId(), AccountId.create("non-present-account"), Money.fromValue(75))
                 //then
                 .statusCode(404);
     }

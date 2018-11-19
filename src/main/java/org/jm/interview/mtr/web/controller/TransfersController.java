@@ -1,4 +1,4 @@
-package org.jm.interview.mtr.web.endpoints;
+package org.jm.interview.mtr.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.jm.interview.mtr.service.AccountId;
